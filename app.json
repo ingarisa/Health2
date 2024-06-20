@@ -11,32 +11,34 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "ios": {
+      "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.anonymous.Health2"
     },
-    "android": {
+      "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff" , 
-       "permissions": [
+        "permissions": [
         "android.permission.health.READ_STEPS",
         "android.permission.health.READ_DISTANCE"
       ] 
       },
       "package": "com.anonymous.Health2"
     },
-    "web": {
+      "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": [
+      "plugins": [
       "react-native-health",
       "react-native-health-connect",
+      "./androidManifestPlugin.js",
       [
         "expo-build-properties", {
           "android": {
             "compileSdkVersion": 34,
             "targetSdkVersion": 34,
+            "buildToolsVersion": "33.0.0",
             "minSdkVersion": 26
           }
         }
