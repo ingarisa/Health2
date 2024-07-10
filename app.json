@@ -11,30 +11,31 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-      "ios": {
+    "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.anonymous.Health2"
     },
-      "android": {
+    "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff" , 
-        "permissions": [
-        "android.permission.health.READ_STEPS",
-        "android.permission.health.READ_DISTANCE"
-      ] 
+        "backgroundColor": "#ffffff"
       },
-      "package": "com.anonymous.Health2"
+      "package": "com.anonymous.Health2",
+      "permissions": [
+        "android.permission.health.READ_STEPS",
+        "android.permission.health.READ_DISTANCE",
+        "android.permission.health.READ_TOTAL_CALORIES_BURNED"
+      ]
     },
-      "web": {
+    "web": {
       "favicon": "./assets/favicon.png"
     },
-      "plugins": [
+    "plugins": [
       "react-native-health",
-      "react-native-health-connect",
-      "./androidManifestPlugin.js",
+      "expo-health-connect",
       [
-        "expo-build-properties", {
+        "expo-build-properties",
+        {
           "android": {
             "compileSdkVersion": 34,
             "targetSdkVersion": 34,

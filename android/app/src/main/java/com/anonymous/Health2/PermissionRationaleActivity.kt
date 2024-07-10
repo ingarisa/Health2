@@ -2,7 +2,7 @@ package com.anonymous.Health2
 
 import android.os.Bundle
 import android.webkit.WebResourceRequest
-import android.webkit.WebView 
+import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
 
