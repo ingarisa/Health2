@@ -22,6 +22,12 @@ import {
   RecordResult,
 } from "react-native-health-connect/lib/typescript/types";
 import { TimeRangeFilter } from "react-native-health-connect/lib/typescript/types/base.types";
+import {
+  countStep,
+  distanceWalkAndRun,
+  getListDistanceWalkAndRun,
+  healthKit,
+} from "./src/modules";
 
 const pipe = require("./util");
 
@@ -50,7 +56,7 @@ const Value = ({ label, value }: Valueprop) => (
 );
 
 const getMidnight = (): Date => {
-  return new Date(new Date().setHours(0, 0, 0, 0));
+  return new Date(new Date("2023-07-10").setHours(0, 0, 0, 0));
 };
 
 const getTodayDate = (): Date => {
@@ -74,109 +80,124 @@ export default function App() {
     const [distanceData, setDistanceData] = useState(healthvalue);
     const [activeData, setActiveData] = useState(healthvalue);
     const [basalData, setBasalData] = useState(healthvalue);
-    useEffect(() => {
-      if (Platform.OS !== "ios") {
-        return;
+
+    const healthKitModule = async () => {
+      const isAvailable = await healthKit();
+      if (isAvailable) {
+        await countStep();
+        await distanceWalkAndRun();
+        const res = await getListDistanceWalkAndRun();
+        console.log(res);
       }
-      AppleHealthKit.isAvailable((err, isAvaliable) => {
-        if (err) {
-          console.log("error checking availability");
-          return;
-        }
-        if (!isAvaliable) {
-          console.log("Apple Health NOT AVAILABLE");
-          return;
-        }
-        AppleHealthKit.initHealthKit(permissions, (err) => {
-          if (err) {
-            console.log("Error getting permissions");
-            return;
-          }
-          setHasPermission(true);
-        });
-      });
+    };
+
+    useEffect(() => {
+      healthKitModule();
     }, []);
+    // useEffect(() => {
+    //   if (Platform.OS !== "ios") {
+    //     return;
+    //   }
+    //   AppleHealthKit.isAvailable((err, isAvaliable) => {
+    //     if (err) {
+    //       console.log("error checking availability");
+    //       return;
+    //     }
+    //     if (!isAvaliable) {
+    //       console.log("Apple Health NOT AVAILABLE");
+    //       return;
+    //     }
+    //     AppleHealthKit.initHealthKit(permissions, (err) => {
+    //       if (err) {
+    //         console.log("Error getting permissions");
+    //         return;
+    //       }
+    //       setHasPermission(true);
+    //     });
+    //   });
+    // }, []);
 
-    useEffect(() => {
-      if (!hasPermissions) {
-        return;
-      }
+    // useEffect(() => {
+    //   if (!hasPermissions) {
+    //     return;
+    //   }
 
-      const options: HealthInputOptions = {
-        startDate: getMidnight().toISOString(),
-        endDate: getTodayDate().toISOString(),
-        ascending: true,
-        period: 60,
-        /*includeManuallyAdded: false, */
-      };
-      AppleHealthKit.getStepCount(options, (err, results) => {
-        if (err) {
-          console.log("Error getting steps");
-        }
+    //   const options: HealthInputOptions = {
+    //     startDate: getMidnight().toISOString(),
+    //     endDate: getTodayDate().toISOString(),
+    //     ascending: true,
+    //     period: 60,
+    //     /*includeManuallyAdded: false, */
+    //   };
+    //   AppleHealthKit.getStepCount(options, (err, results) => {
+    //     if (err) {
+    //       console.log("Error getting steps");
+    //     }
 
-        setSteps(results.value.toLocaleString("en-US", options));
-        // console.log(results);
-      });
+    //     setSteps(results.value.toLocaleString("en-US", options));
+    //     // console.log(results);
+    //   });
 
-      AppleHealthKit.getDistanceWalkingRunning(options, (err, results) => {
-        if (err) {
-          console.log("Error getting distance samples");
-        }
-        const options = {
-          style: "decimal",
-          minimumFractionDigits: 0,
-          maximumFractionDigits: 2,
-        };
-        setDistance(results.value.toLocaleString("en-US", options));
-      });
+    //   AppleHealthKit.getDistanceWalkingRunning(options, (err, results) => {
+    //     if (err) {
+    //       console.log("Error getting distance samples");
+    //     }
+    //     const options = {
+    //       style: "decimal",
+    //       minimumFractionDigits: 0,
+    //       maximumFractionDigits: 2,
+    //     };
+    //     setDistance(results.value.toLocaleString("en-US", options));
+    //   });
 
-      AppleHealthKit.getActiveEnergyBurned(options, (err, results) => {
-        if (err) {
-          console.log("Error getting active energy");
-        }
-        // console.log("active calories:", results);
-        const totalActiveCalories = results.reduce(
-          (sum, cur) => sum + cur.value,
-          0
-        );
-        // setTotalCalories(totalActiveCalories.toLocaleString());
-        setActive(totalActiveCalories);
-        setActiveData(results);
-      });
+    //   AppleHealthKit.getActiveEnergyBurned(options, (err, results) => {
+    //     if (err) {
+    //       console.log("Error getting active energy");
+    //     }
+    //     // console.log("active calories:", results);
+    //     const totalActiveCalories = results.reduce(
+    //       (sum, cur) => sum + cur.value,
+    //       0
+    //     );
+    //     // setTotalCalories(totalActiveCalories.toLocaleString());
+    //     setActive(totalActiveCalories);
+    //     setActiveData(results);
+    //   });
 
-      AppleHealthKit.getBasalEnergyBurned(options, (err, results) => {
-        if (err) {
-          console.log("Error getting basal energy");
-        }
-        // console.log("daily resting energy samples:", results);
-        const totalBasalCalories = results.reduce(
-          (sum, cur) => sum + cur.value,
-          0
-        );
+    //   AppleHealthKit.getBasalEnergyBurned(options, (err, results) => {
+    //     if (err) {
+    //       console.log("Error getting basal energy");
+    //     }
+    //     // console.log("daily resting energy samples:", results);
+    //     const totalBasalCalories = results.reduce(
+    //       (sum, cur) => sum + cur.value,
+    //       0
+    //     );
 
-        // const totalCalories = totalBasalCalories + +active;
-        setBasalCalories(totalBasalCalories);
-        setBasalData(results);
-      });
-      AppleHealthKit.getDailyStepCountSamples(options, (err, results) => {
-        if (err) {
-          console.log("Error getting daily steps");
-        }
-        // console.log("daily step count:", results);
-        setStepsData(results);
-      });
+    //     // const totalCalories = totalBasalCalories + +active;
+    //     setBasalCalories(totalBasalCalories);
+    //     setBasalData(results);
+    //   });
+    //   AppleHealthKit.getDailyStepCountSamples(options, (err, results) => {
+    //     if (err) {
+    //       console.log("Error getting daily steps");
+    //     }
+    //     // console.log("daily step count:", results);
+    //     setStepsData(results);
+    //   });
+    //   AppleHealthKit.getDailyDistanceWalkingRunningSamples(
+    //     options,
+    //     (err, results) => {
+    //       if (err) {
+    //         console.log("Error getting daily distance samples");
+    //       }
+    //       console.log("results", err, results);
+    //       // console.log("daily distance samples:", results);
+    //       setDistanceData(results);
+    //     }
+    //   );
+    // }, [hasPermissions]);
 
-      AppleHealthKit.getDailyDistanceWalkingRunningSamples(
-        options,
-        (err, results) => {
-          if (err) {
-            console.log("Error getting daily distance samples");
-          }
-          // console.log("daily distance samples:", results);
-          setDistanceData(results);
-        }
-      );
-    }, [hasPermissions]);
     const waiting = async () => {
       await active;
       await basal;
