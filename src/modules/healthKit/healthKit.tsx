@@ -1,28 +1,8 @@
 import AppleHealthKit, {
-  HealthKitPermissions,
   HealthInputOptions,
-  HealthUnit,
   HealthValue,
 } from "react-native-health";
-import {
-  initialize,
-  readRecords,
-  revokeAllPermissions,
-  requestPermission,
-  getGrantedPermissions,
-} from "react-native-health-connect";
-import {
-  HealthConnectRecord,
-  Permission,
-  ReadRecordsOptions,
-  RecordResult,
-} from "react-native-health-connect/lib/typescript/types";
-import {
-  initialHealthKit,
-  initialHealthKitAndroid,
-  permissions,
-} from "./permission";
-import { numberFormat } from "../../utils/numberFormat";
+import { initialHealthKit, initialHealthKitAndroid } from "./permission";
 import { Platform } from "react-native";
 import { getHealthDataRecord } from "./healthKitAndroid";
 

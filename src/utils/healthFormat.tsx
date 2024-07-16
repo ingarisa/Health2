@@ -1,3 +1,5 @@
+import { numberFormat } from "./numberFormat";
+
 // IOS
 interface RecordData {
   startDate: string;
@@ -8,7 +10,7 @@ export const formatStepsData = (steps: RecordData[]) => {
   return steps.map((d) => ({
     calories: 0,
     distance: 0,
-    stepCount: d.value,
+    stepCount: parseFloat(d.value.toFixed(0)),
     from: d.startDate,
     to: d.endDate,
     period:
@@ -20,7 +22,7 @@ export const formatStepsData = (steps: RecordData[]) => {
 export const formatDistanceData = (distance: RecordData[]) => {
   return distance.map((d) => ({
     calories: 0,
-    distance: d.value,
+    distance: parseFloat(d.value.toFixed(2)),
     stepCount: 0,
     from: d.startDate,
     to: d.endDate,
@@ -32,7 +34,7 @@ export const formatDistanceData = (distance: RecordData[]) => {
 
 export const formatCaloriesData = (calories: RecordData[]) => {
   return calories.map((d) => ({
-    calories: d.value,
+    calories: parseFloat(d.value.toFixed(0)),
     distance: 0,
     stepCount: 0,
     from: d.startDate,
