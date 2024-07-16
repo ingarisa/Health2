@@ -12,7 +12,9 @@ import {
   getGrantedPermissions,
 } from "react-native-health-connect";
 import {
+  HealthConnectRecord,
   Permission,
+  ReadRecordsOptions,
   RecordResult,
 } from "react-native-health-connect/lib/typescript/types";
 import {
@@ -27,7 +29,7 @@ import { getHealthDataRecord } from "./healthKitAndroid";
 // const pipe = require("./util");
 
 const getMidnight = (): Date => {
-  return new Date(new Date("2023-07-10").setHours(0, 0, 0, 0));
+  return new Date(new Date().setHours(0, 0, 0, 0));
 };
 const getTodayDate = (): Date => {
   return new Date();
@@ -40,7 +42,7 @@ const options: HealthInputOptions = {
   /*includeManuallyAdded: false, */
 };
 
-const healthKit = async (): Promise<boolean> => {
+const initHealthKit = async (): Promise<boolean> => {
   if (Platform.OS === "ios") {
     return initialHealthKit();
   }
@@ -48,10 +50,11 @@ const healthKit = async (): Promise<boolean> => {
 };
 
 export const countStep = async (): Promise<number> => {
+  // get sum of steps for display
   if (Platform.OS === "ios") {
     return new Promise<number>((resolve, reject) => {
       AppleHealthKit.getStepCount(options, (err, results) => {
-        if (err) reject("Error getting steps");
+        if (err) reject("Error getting display steps");
         resolve(results.value);
       });
     });
@@ -62,10 +65,11 @@ export const countStep = async (): Promise<number> => {
 };
 
 export const distanceWalkAndRun = async (): Promise<number> => {
+  // get sum of distance for display
   if (Platform.OS === "ios") {
     return new Promise<number>((resolve, reject) => {
       AppleHealthKit.getDistanceWalkingRunning(options, (err, results) => {
-        if (err) reject("Error getting daily steps");
+        if (err) reject("Error getting display distance");
         resolve(results.value);
       });
     });
@@ -75,40 +79,58 @@ export const distanceWalkAndRun = async (): Promise<number> => {
   return result.reduce((sum, cur) => sum + cur.distance.inMeters, 0);
 };
 
-export const energyBurned = (): Promise<HealthValue[]> => {
+export const energyBurned = async (): Promise<HealthValue[]> => {
+  //get array of active energy
   return new Promise<HealthValue[]>((resolve, reject) => {
     AppleHealthKit.getActiveEnergyBurned(options, (err, results) => {
-      if (err) reject("Error getting daily steps");
+      if (err) reject("Error getting active energy list");
       resolve(results);
     });
   });
 };
 
 export const basalEnergyBurned = (): Promise<HealthValue[]> => {
+  // get array of basal energy
   return new Promise<HealthValue[]>((resolve, reject) => {
     AppleHealthKit.getBasalEnergyBurned(options, (err, results) => {
-      if (err) reject("Error getting daily steps");
+      if (err) reject("Error getting basal energy list");
       resolve(results);
     });
   });
 };
 
-export const getListStepCount = (): Promise<HealthValue[]> => {
+export const totalEnergyBurned = async () => {
+  // android
+  const result = await getHealthDataRecord("TotalCaloriesBurned");
+  return result.reduce((sum, cur) => sum + cur.energy.inKilocalories, 0);
+};
+
+export const getListCaloriesAndroid = async () => {
+  return await getHealthDataRecord("TotalCaloriesBurned");
+};
+
+export const getListStepCount = async (): Promise<HealthValue[]> => {
+  // get array of steps
   return new Promise<HealthValue[]>((resolve, reject) => {
     AppleHealthKit.getDailyStepCountSamples(options, (err, results) => {
-      if (err) reject("Error getting daily steps");
+      if (err) reject("Error getting steps list");
       resolve(results);
     });
   });
+};
+
+export const getListStepCountAndroid = async () => {
+  return await getHealthDataRecord("Steps");
 };
 
 export const getListDistanceWalkAndRun = async (): Promise<HealthValue[]> => {
+  // get array of distance
   //   if (Platform.OS === "ios") {
   return new Promise<HealthValue[]>((resolve, reject) => {
     AppleHealthKit.getDailyDistanceWalkingRunningSamples(
       options,
       (err, results) => {
-        if (err) reject("Error getting daily distance samples");
+        if (err) reject("Error getting distance list");
         resolve(results);
       }
     );
@@ -116,9 +138,13 @@ export const getListDistanceWalkAndRun = async (): Promise<HealthValue[]> => {
   //   }
 };
 
-export const summaryHealthValue = (list: HealthValue[]) => {
-  const totalBasalCalories = list.reduce((sum, cur) => sum + cur.value, 0);
-  return totalBasalCalories;
+export const getListWalkAndRunAndroid = async () => {
+  return await getHealthDataRecord("Distance");
 };
 
-export default healthKit;
+export const sumHealthValue = (list: HealthValue[]) => {
+  const totalValue = list.reduce((sum, cur) => sum + cur.value, 0);
+  return totalValue;
+};
+
+export default initHealthKit;
