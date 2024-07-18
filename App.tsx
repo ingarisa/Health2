@@ -99,7 +99,7 @@ export default function App() {
   }
 
   const onPressRefresh = async () => {
-    RNRestart.Restart();
+    healthKitModule();
   };
 
   const ExportRawData = async () => {
