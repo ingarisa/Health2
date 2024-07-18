@@ -1,4 +1,3 @@
-import RNRestart from "react-native-restart";
 import { useEffect, useState } from "react";
 import { Button, StyleSheet, Text, View } from "react-native";
 import { Platform } from "react-native";
@@ -99,7 +98,7 @@ export default function App() {
   }
 
   const onPressRefresh = async () => {
-    healthKitModule();
+    await healthKitModule();
   };
 
   const ExportRawData = async () => {
