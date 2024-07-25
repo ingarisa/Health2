@@ -1,9 +1,19 @@
+export type RecordFinalResult = {
+  calories: number;
+  distance: number;
+  stepCount: number;
+  from: string;
+  to: string;
+  period: number;
+  location: string | null;
+};
+
 // IOS
-interface RecordData {
+type RecordData = {
   startDate: string;
   endDate: string;
   value: number;
-}
+};
 export const formatStepsData = (steps: RecordData[]) => {
   return steps.map((d) => ({
     calories: 0,
@@ -43,13 +53,13 @@ export const formatCaloriesData = (calories: RecordData[]) => {
   }));
 };
 // ANDROID
-interface RecordDataA {
+type RecordDataA = {
   source: string;
   period: number;
   startDate: string;
   endDate: string;
   count: number;
-}
+};
 
 export const formatStepsToDataAndroid = (steps: RecordDataA[]) => {
   return steps.map((d) => ({
@@ -86,16 +96,6 @@ export const formatCaloriesToDataAndroid = (calories: RecordDataA[]) => {
     location: null,
   }));
 };
-
-interface RecordFinalResult {
-  calories: number;
-  distance: number;
-  stepCount: number;
-  from: string;
-  to: string;
-  period: number;
-  location: string | null;
-}
 
 export const combineResults = (combinedarray: RecordFinalResult[]) => {
   return Object.values(

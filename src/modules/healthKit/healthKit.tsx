@@ -11,20 +11,11 @@ import {
   getHealthDataRecord,
 } from "./healthKitAndroid";
 import {
+  RecordFinalResult,
   formatCaloriesData,
   formatDistanceData,
   formatStepsData,
 } from "../../utils/healthFormat";
-
-export type RecordFinalResult = {
-  calories: number;
-  distance: number;
-  stepCount: number;
-  from: string;
-  to: string;
-  period: number;
-  location: string | null;
-};
 
 const getMidnight = (): Date => {
   return new Date(new Date().setHours(0, 0, 0, 0));

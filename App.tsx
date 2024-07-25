@@ -1,27 +1,15 @@
 import { useEffect, useState } from "react";
-import { Button, StyleSheet, Text, View } from "react-native";
+import { Button, Text, View } from "react-native";
 import { countStep, distanceWalkAndRun } from "./src/modules";
 import initHealthKit, {
-  RecordFinalResult,
   TotalEnergyBurned,
   formatCalories,
   formatDistance,
   formatSteps,
 } from "./src/modules/healthKit/healthKit";
 import { numberFormat } from "./src/utils/numberFormat";
-import { combineResults } from "./src/utils/healthFormat";
-
-type Valueprop = {
-  label: string;
-  value: string;
-};
-
-const Value = ({ label, value }: Valueprop) => (
-  <View style={styles.valuecontainer}>
-    <Text style={styles.label}>{label}</Text>
-    <Text style={styles.value}>{value}</Text>
-  </View>
-);
+import { RecordFinalResult, combineResults } from "./src/utils/healthFormat";
+import { Value, styles } from "./src/utils/styles";
 
 export default function App() {
   const [steps, setSteps] = useState("0");
@@ -93,41 +81,3 @@ export default function App() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  box: {
-    justifyContent: "center",
-    flex: 1,
-  },
-  button: {
-    rowGap: 20,
-    marginTop: 60,
-  },
-  text: {
-    fontSize: 40,
-    fontWeight: "700",
-    color: "#006D03",
-    marginBottom: 40,
-  },
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    rowGap: 20,
-    backgroundColor: "#fff",
-  },
-
-  valuecontainer: {
-    alignItems: "center",
-    marginVertical: 7,
-  },
-  label: {
-    fontSize: 20,
-    color: "#588550",
-  },
-  value: {
-    fontSize: 40,
-    fontWeight: "500",
-    color: "#006D03",
-  },
-});
