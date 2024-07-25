@@ -1,37 +1,28 @@
 import { useEffect, useState } from "react";
 import { Button, StyleSheet, Text, View } from "react-native";
-import { Platform } from "react-native";
-import {
-  countStep,
-  distanceWalkAndRun,
-  getListDistanceWalkAndRun,
-} from "./src/modules";
+import { countStep, distanceWalkAndRun } from "./src/modules";
 import initHealthKit, {
-  basalEnergyBurned,
-  energyBurned,
-  getListCaloriesAndroid,
-  getListStepCount,
-  getListStepCountAndroid,
-  getListWalkAndRunAndroid,
-  sumHealthValue,
-  totalEnergyBurned,
+  TotalEnergyBurned,
+  formatCalories,
+  formatDistance,
+  formatSteps,
 } from "./src/modules/healthKit/healthKit";
 import { numberFormat } from "./src/utils/numberFormat";
-import {
-  combineResults,
-  formatCaloriesData,
-  formatDistanceData,
-  formatStepsData,
-} from "./src/utils/healthFormat";
-import {
-  calculateCaloriesData,
-  calculateDistanceData,
-  calculateStepsData,
-} from "./src/modules/healthKit/healthKitAndroid";
+import { combineResults } from "./src/utils/healthFormat";
 
 type Valueprop = {
   label: string;
   value: string;
+};
+
+type RecordFinalResult = {
+  calories: number;
+  distance: number;
+  stepCount: number;
+  from: string;
+  to: string;
+  period: number;
+  location: string | null;
 };
 
 const Value = ({ label, value }: Valueprop) => (
@@ -60,72 +51,29 @@ export default function App() {
         })
       );
 
-      if (Platform.OS === "ios") {
-        const sumActiveEnergy = sumHealthValue(await energyBurned());
-        const sumBasalEnergy = sumHealthValue(await basalEnergyBurned());
-        setTotalCalories(
-          numberFormat(sumActiveEnergy + sumBasalEnergy, {
-            style: "decimal",
-            min: 0,
-            max: 0,
-          })
-        );
-      }
-
-      if (Platform.OS === "android") {
-        setTotalCalories(
-          numberFormat(await totalEnergyBurned(), {
-            style: "decimal",
-            min: 0,
-            max: 0,
-          })
-        );
-      }
+      setTotalCalories(
+        numberFormat(await TotalEnergyBurned(), {
+          style: "decimal",
+          min: 0,
+          max: 0,
+        })
+      );
     }
   };
 
   useEffect(() => {
     healthKitModule();
   }, []);
-  interface RecordFinalResult {
-    calories: number;
-    distance: number;
-    stepCount: number;
-    from: string;
-    to: string;
-    period: number;
-    location: string | null;
-  }
 
   const onPressRefresh = async () => {
     await healthKitModule();
   };
 
   const ExportRawData = async () => {
-    if (Platform.OS === "ios") {
-      var stepsresult = formatStepsData(await getListStepCount());
-      var distanceresult = formatDistanceData(
-        await getListDistanceWalkAndRun()
-      );
-      var caloriesresult = formatCaloriesData(
-        (await energyBurned()).concat(await basalEnergyBurned())
-      );
-    } else {
-      // android
-      stepsresult = await calculateStepsData(await getListStepCountAndroid());
-      distanceresult = await calculateDistanceData(
-        await getListWalkAndRunAndroid()
-      );
-      caloriesresult = await calculateCaloriesData(
-        await getListCaloriesAndroid()
-      );
-    }
-
-    const combinedarray: RecordFinalResult[] = caloriesresult.concat(
-      stepsresult,
-      distanceresult
+    const combinedarray: RecordFinalResult[] = (await formatSteps()).concat(
+      await formatDistance(),
+      await formatCalories()
     );
-
     const result = combineResults(combinedarray);
     const sortedresults = result.sort(
       (a: any, b: any) =>
