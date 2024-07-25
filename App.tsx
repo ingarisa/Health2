@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Button, StyleSheet, Text, View } from "react-native";
 import { countStep, distanceWalkAndRun } from "./src/modules";
 import initHealthKit, {
+  RecordFinalResult,
   TotalEnergyBurned,
   formatCalories,
   formatDistance,
@@ -13,16 +14,6 @@ import { combineResults } from "./src/utils/healthFormat";
 type Valueprop = {
   label: string;
   value: string;
-};
-
-type RecordFinalResult = {
-  calories: number;
-  distance: number;
-  stepCount: number;
-  from: string;
-  to: string;
-  period: number;
-  location: string | null;
 };
 
 const Value = ({ label, value }: Valueprop) => (

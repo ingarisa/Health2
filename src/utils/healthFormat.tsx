@@ -1,20 +1,3 @@
-import { Platform } from "react-native";
-import {
-  getListCaloriesAndroid,
-  getListCaloriesIOS,
-  getListDistanceWalkAndRun,
-  getListStepCount,
-  getListStepCountAndroid,
-  getListWalkAndRunAndroid,
-} from "../modules/healthKit/healthKit";
-import { numberFormat } from "./numberFormat";
-import {
-  calculateCaloriesData,
-  calculateDistanceData,
-  calculateStepsData,
-} from "../modules/healthKit/healthKitAndroid";
-import { RecordResult } from "react-native-health-connect/lib/typescript/types";
-
 // IOS
 interface RecordData {
   startDate: string;

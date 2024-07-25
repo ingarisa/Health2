@@ -16,7 +16,7 @@ import {
   formatStepsData,
 } from "../../utils/healthFormat";
 
-type RecordFinalResult = {
+export type RecordFinalResult = {
   calories: number;
   distance: number;
   stepCount: number;
@@ -58,7 +58,6 @@ export const countStep = async (): Promise<number> => {
       });
     });
   }
-
   const stepList = await getHealthDataRecord("Steps");
   return stepList.reduce((sum, cur) => sum + cur.count, 0);
 };
@@ -174,22 +173,22 @@ export default initHealthKit;
 
 // format data for final result
 export const formatSteps = async (): Promise<RecordFinalResult[]> => {
-  if (Platform.OS == "ios") {
+  if (Platform.OS === "ios") {
     return formatStepsData(await getListStepCount());
   }
   return await calculateStepsData(await getListStepCountAndroid());
 };
 
 export const formatDistance = async (): Promise<RecordFinalResult[]> => {
-  if (Platform.OS == "ios") {
+  if (Platform.OS === "ios") {
     return formatDistanceData(await getListDistanceWalkAndRun());
   }
   return await calculateDistanceData(await getListWalkAndRunAndroid());
 };
 
 export const formatCalories = async (): Promise<RecordFinalResult[]> => {
-  if (Platform.OS == "ios") {
-    formatCaloriesData(await getListCaloriesIOS());
+  if (Platform.OS === "ios") {
+    return formatCaloriesData(await getListCaloriesIOS());
   }
   return await calculateCaloriesData(await getListCaloriesAndroid());
 };
