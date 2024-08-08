@@ -2,6 +2,7 @@
   "expo": {
     "name": "Health2",
     "slug": "Health2",
+    "scheme": "Health2",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -42,7 +43,8 @@
             "minSdkVersion": 26
           }
         }
-      ]
+      ],
+      "expo-router"
     ]
   }
 }

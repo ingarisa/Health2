@@ -14,18 +14,24 @@ export const Value = ({ label, value }: Valueprop) => (
 
 export const styles = StyleSheet.create({
   box: {
+    alignItems: "center",
     justifyContent: "center",
     flex: 1,
+    backgroundColor: "white",
+  },
+  home: {
+    alignItems: "center",
+    marginTop: 20,
   },
   button: {
     rowGap: 20,
-    marginTop: 60,
+    marginTop: 40,
   },
   text: {
     fontSize: 40,
     fontWeight: "700",
     color: "#006D03",
-    marginBottom: 40,
+    marginBottom: 20,
   },
   container: {
     flex: 1,
@@ -47,5 +53,17 @@ export const styles = StyleSheet.create({
     fontSize: 40,
     fontWeight: "500",
     color: "#006D03",
+  },
+  input: {
+    height: 550,
+    margin: 12,
+    borderWidth: 3,
+    borderColor: "#588550",
+    paddingHorizontal: 30,
+    fontSize: 20,
+    color: "#588550",
+  },
+  exportdata: {
+    marginHorizontal: 20,
   },
 });

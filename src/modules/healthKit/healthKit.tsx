@@ -12,6 +12,7 @@ import {
 } from "./healthKitAndroid";
 import {
   RecordFinalResult,
+  combineResults,
   formatCaloriesData,
   formatDistanceData,
   formatStepsData,
