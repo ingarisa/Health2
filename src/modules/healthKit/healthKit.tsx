@@ -12,7 +12,6 @@ import {
 } from "./healthKitAndroid";
 import {
   RecordFinalResult,
-  combineResults,
   formatCaloriesData,
   formatDistanceData,
   formatStepsData,
@@ -32,7 +31,7 @@ const options: HealthInputOptions = {
   /*includeManuallyAdded: false, */
 };
 
-const initHealthKit = async (): Promise<boolean> => {
+export const initHealthKit = async (): Promise<boolean> => {
   // initialize health kit
   if (Platform.OS === "ios") {
     return initialHealthKit();

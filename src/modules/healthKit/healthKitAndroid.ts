@@ -1,6 +1,6 @@
 import { readRecords } from "react-native-health-connect";
 import { HealthConnectRecord, RecordResult } from "react-native-health-connect/lib/typescript/types";
-import pipe from "../../../util";
+import pipe from "../../utils/util";
 import { formatCaloriesToDataAndroid, formatDistanceToDataAndroid, formatStepsToDataAndroid } from "../../utils/healthFormat";
 
 const getMidnight = (): Date => {
@@ -76,7 +76,7 @@ const extractDataGroupByMinutes = (data: RecordData[]): RecordData[] => {
         startTime.setSeconds(0, 0);
 
         const endTime = new Date(entry.endDate);
-        endTime.setSeconds(59, 599);
+        endTime.setSeconds(59, 999);
 
         const count = entry.count;
         const minutes = Math.ceil((+endTime - +startTime) / 60000);

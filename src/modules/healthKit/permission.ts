@@ -2,18 +2,6 @@ import AppleHealthKit, { HealthKitPermissions } from "react-native-health";
 import { getGrantedPermissions, initialize, requestPermission, revokeAllPermissions } from "react-native-health-connect";
 import { Permission } from "react-native-health-connect/lib/typescript/types";
 
-export const permissions: HealthKitPermissions = {
-    permissions: {
-        read: [
-            AppleHealthKit.Constants.Permissions.Steps,
-            AppleHealthKit.Constants.Permissions.DistanceWalkingRunning,
-            AppleHealthKit.Constants.Permissions.ActiveEnergyBurned,
-            AppleHealthKit.Constants.Permissions.BasalEnergyBurned,
-        ],
-        write: [],
-    },
-};
-
 const verifyPermission = (userPermissions: Permission[], requirePermissions: Permission[]): Boolean => {
     const permissionStatus = [];
 
@@ -64,10 +52,22 @@ export const initialHealthKitAndroid = async (): Promise<boolean> => {
     return Promise.resolve(true);
 };
 
+export const permissions: HealthKitPermissions = {
+    permissions: {
+        read: [
+            AppleHealthKit.Constants.Permissions.Steps,
+            AppleHealthKit.Constants.Permissions.DistanceWalkingRunning,
+            AppleHealthKit.Constants.Permissions.ActiveEnergyBurned,
+            AppleHealthKit.Constants.Permissions.BasalEnergyBurned,
+        ],
+        write: [],
+    },
+};
+
 export const initialHealthKit = async (): Promise<boolean> => {
     try {
-        const isHealKitAvailable = await available();
-        if (isHealKitAvailable) {
+        const isHealthKitAvailable = await available();
+        if (isHealthKitAvailable) {
             await initHealthKit(permissions);
             return Promise.resolve(true);
         }
